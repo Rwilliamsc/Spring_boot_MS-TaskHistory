@@ -1,5 +1,6 @@
 package edu.br.infnet.mstaskhistory.service;
 
+import edu.br.infnet.mstaskhistory.dto.TaskHistoryDto;
 import edu.br.infnet.mstaskhistory.model.ChangeType;
 import edu.br.infnet.mstaskhistory.model.TaskHistory;
 import edu.br.infnet.mstaskhistory.repository.TaskHistoryRepository;
@@ -15,36 +16,36 @@ public class TaskHistoryService {
     @Autowired
     private TaskHistoryRepository taskHistoryRepository;
 
-    public void logCreateAction(Long taskId, String changedBy, String newValue) {
+    public void logCreateAction(TaskHistoryDto taskHistoryDto) {
         TaskHistory history = new TaskHistory();
-        history.setTaskId(taskId);
-        history.setChangedBy(changedBy);
+        history.setTaskId(taskHistoryDto.taskId());
+        history.setUserId(taskHistoryDto.userId());
         history.setChangeType(ChangeType.valueOf("CREATE"));
         history.setChangeTimestamp(LocalDateTime.now());
-        history.setNewValue(newValue);
+        history.setNewValue(taskHistoryDto.newValue());
 
         taskHistoryRepository.save(history);
     }
 
-    public void logUpdateAction(Long taskId, String changedBy, String oldValue, String newValue) {
+    public void logUpdateAction(TaskHistoryDto taskHistoryDto) {
         TaskHistory history = new TaskHistory();
-        history.setTaskId(taskId);
-        history.setChangedBy(changedBy);
+        history.setTaskId(taskHistoryDto.taskId());
+        history.setUserId(taskHistoryDto.userId());
         history.setChangeType(ChangeType.valueOf("UPDATE"));
         history.setChangeTimestamp(LocalDateTime.now());
-        history.setOldValue(oldValue);
-        history.setNewValue(newValue);
+        history.setOldValue(taskHistoryDto.oldValue());
+        history.setNewValue(taskHistoryDto.newValue());
 
         taskHistoryRepository.save(history);
     }
 
-    public void logDeleteAction(Long taskId, String changedBy, String oldValue) {
+    public void logDeleteAction(TaskHistoryDto taskHistoryDto) {
         TaskHistory history = new TaskHistory();
-        history.setTaskId(taskId);
-        history.setChangedBy(changedBy);
+        history.setTaskId(taskHistoryDto.taskId());
+        history.setUserId(taskHistoryDto.userId());
         history.setChangeType(ChangeType.valueOf("DELETE"));
         history.setChangeTimestamp(LocalDateTime.now());
-        history.setOldValue(oldValue);
+        history.setOldValue(taskHistoryDto.oldValue());
 
         taskHistoryRepository.save(history);
     }

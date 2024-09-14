@@ -15,7 +15,6 @@ public class TaskHistory {
     private Long id;
     private Long taskId;
     private Long userId;
-    private String changedBy;
     private ChangeType changeType;
     private LocalDateTime changeTimestamp;
     private String oldValue;
@@ -36,15 +35,6 @@ public class TaskHistory {
     public void setTaskId(Long taskId) {
         this.taskId = taskId;
     }
-
-    public String getChangedBy() {
-        return changedBy;
-    }
-
-    public void setChangedBy(String changedBy) {
-        this.changedBy = changedBy;
-    }
-
 
     public LocalDateTime getChangeTimestamp() {
         return changeTimestamp;
@@ -76,6 +66,10 @@ public class TaskHistory {
 
     public void setUserId(Long userId) {
         this.userId = userId;
+    }
+
+    public ChangeType getChangeType() {
+        return changeType;
     }
 
     public void setChangeType(ChangeType changeType) {

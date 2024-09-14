@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 public record TaskHistoryDto(
         Long taskId,
         Long userId,
-        String changedBy,
+        ChangeType changeType,
         LocalDateTime changeTimestamp,
         String oldValue,
         String newValue
