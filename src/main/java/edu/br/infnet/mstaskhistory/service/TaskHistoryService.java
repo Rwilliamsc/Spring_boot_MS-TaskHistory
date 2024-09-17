@@ -4,6 +4,9 @@ import edu.br.infnet.mstaskhistory.dto.TaskHistoryDto;
 import edu.br.infnet.mstaskhistory.model.ChangeType;
 import edu.br.infnet.mstaskhistory.model.TaskHistory;
 import edu.br.infnet.mstaskhistory.repository.TaskHistoryRepository;
+import edu.br.infnet.mstaskhistory.util.Mapper;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,15 +19,25 @@ public class TaskHistoryService {
     @Autowired
     private TaskHistoryRepository taskHistoryRepository;
 
-    public void logCreateAction(TaskHistoryDto taskHistoryDto) {
-        TaskHistory history = new TaskHistory();
-        history.setTaskId(taskHistoryDto.taskId());
-        history.setUserId(taskHistoryDto.userId());
-        history.setChangeType(ChangeType.valueOf("CREATE"));
-        history.setChangeTimestamp(LocalDateTime.now());
-        history.setNewValue(taskHistoryDto.newValue());
+    Logger logger= LogManager.getLogger(TaskHistoryService.class);
 
-        taskHistoryRepository.save(history);
+    public void logCreateAction(TaskHistoryDto taskHistoryDto) {
+        try{
+            TaskHistory history = new TaskHistory();
+            history.setTaskId(taskHistoryDto.taskId());
+            history.setUserId(taskHistoryDto.userId());
+            history.setChangeType(ChangeType.valueOf("CREATE"));
+            history.setChangeTimestamp(LocalDateTime.now());
+            history.setNewValue(taskHistoryDto.newValue());
+
+            taskHistoryRepository.save(history);
+            logger.info("TaskHistoryService:logCreateAction: {}", Mapper.mapToJsonString(history));
+        }
+        catch (Exception e){
+           logger.error("TaskHistoryService:logCreateAction: {}", e.getMessage());
+           throw new RuntimeException(e.getMessage());
+        }
+
     }
 
     public void logUpdateAction(TaskHistoryDto taskHistoryDto) {
