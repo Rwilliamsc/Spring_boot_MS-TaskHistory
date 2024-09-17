@@ -49,7 +49,15 @@ public class TaskHistoryService {
         history.setOldValue(taskHistoryDto.oldValue());
         history.setNewValue(taskHistoryDto.newValue());
 
-        taskHistoryRepository.save(history);
+        try{
+            taskHistoryRepository.save(history);
+            logger.info("TaskHistoryService:logUpdateAction: {}", Mapper.mapToJsonString(history));
+        }
+        catch(Exception e){
+            logger.error("TaskHistoryService:logUpdateAction: {}", e.getMessage());
+            throw new RuntimeException(e.getMessage());
+        }
+
     }
 
     public void logDeleteAction(TaskHistoryDto taskHistoryDto) {
@@ -59,15 +67,36 @@ public class TaskHistoryService {
         history.setChangeType(ChangeType.valueOf("DELETE"));
         history.setChangeTimestamp(LocalDateTime.now());
         history.setOldValue(taskHistoryDto.oldValue());
-
-        taskHistoryRepository.save(history);
+        try{
+            taskHistoryRepository.save(history);
+            logger.info("TaskHistoryService:logDeleteAction: {}", Mapper.mapToJsonString(history));
+        }
+        catch(Exception e){
+            logger.error("TaskHistoryService:logDeleteAction: {}", e.getMessage());
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
     public List<TaskHistory> getAllTaskHistory() {
-        return taskHistoryRepository.findAll();
+        try {
+            List<TaskHistory> taskHistories = taskHistoryRepository.findAll();
+            return taskHistories;
+        }
+        catch (Exception e) {
+            logger.error("TaskHistoryService:getAllTaskHistory: {}", e.getMessage());
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
     public List<TaskHistory> getAllTaskHistoryByUserId(Long userId) {
-        return taskHistoryRepository.findByUserId(userId);
+        try{
+            List<TaskHistory> taskHistories = taskHistoryRepository.findByUserId(userId);
+            logger.info("TaskHistoryService:getAllTaskHistoryByUserId: {}", taskHistories.toString());
+            return taskHistories;
+        }
+        catch (Exception e){
+            logger.error("TaskHistoryService:getAllTaskHistoryByUserId: {}", e.getMessage());
+            throw new RuntimeException(e.getMessage());
+        }
     }
 }
